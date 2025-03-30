@@ -1,0 +1,66 @@
+[tasks.install_fmt]
+command = "rustup"
+args = ["component", "add", "rustfmt"]
+
+[tasks.install_clippy]
+command = "rustup"
+args = ["component", "add", "clippy"]
+
+[tasks.install_audit]
+command = "cargo"
+args = ["install", "--debug", "cargo-audit"]
+
+[tasks.install_all]
+dependencies = ["install_fmt", "install_clippy", "install_audit"]
+
+[tasks.fmt]
+command = "cargo"
+args = ["fmt", "--verbose"]
+description = "code fmt"
+
+[tasks.check]
+command = "cargo"
+args = ["check", "--all-targets", "--all-features", "--verbose"]
+description = "code check"
+
+[tasks.clippy]
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings", "--verbose"]
+description = "code linting"
+
+[tasks.debug_build]
+command = "cargo"
+args = ["build", "--verbose"]
+description = "debug build"
+
+[tasks.release_build]
+command = "cargo"
+args = ["build", "--release", "--verbose"]
+description = "release build"
+
+[tasks.audit_dependencies]
+command = "cargo"
+args = ["audit"]
+description = "audit dependencies"
+
+[tasks.debug_tests]
+command = "cargo"
+args = ["test", "--verbose"]
+description = "debug tests"
+
+[tasks.release_tests]
+command = "cargo"
+args = ["test", "--release", "--verbose"]
+description = "release tests"
+
+[tasks.debug_ci]
+dependencies = ["fmt", "check", "clippy", "audit_dependencies", "debug_build", "debug_tests"]
+description = "debug ci"
+
+[tasks.release_ci]
+dependencies = ["fmt", "check", "clippy", "audit_dependencies", "release_build", "release_tests"]
+description = "release ci"
+
+[tasks.ci]
+dependencies = ["fmt", "check", "clippy", "audit_dependencies", "debug_build", "debug_tests", "release_build", "release_tests"]
+description = "debug & release ci"
